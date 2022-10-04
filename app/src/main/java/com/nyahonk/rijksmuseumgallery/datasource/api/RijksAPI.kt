@@ -18,10 +18,10 @@ interface RijksAPI {
         @Query("p") pageNumber: String = "0"
         ): ArtCollectionResponse
 
-    @GET("collection/{collection}?{key}")
+    @GET("collection/{collection}")
     suspend fun getCollectionDetails(
         @Path("collection") collection: String,
-        @Path("key") key: String = ApiKey.API_KEY
+        @Query("key") key: String = ApiKey.API_KEY
     ): ArtCollectionDetailsResponse
 
 }

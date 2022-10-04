@@ -20,13 +20,13 @@ import androidx.paging.compose.itemsIndexed
 import coil.compose.SubcomposeAsyncImage
 import com.nyahonk.rijksmuseumgallery.R
 import com.nyahonk.rijksmuseumgallery.models.ArtCollectionListItem
+import com.nyahonk.rijksmuseumgallery.ui.screens.Screens
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenBody(
-    navController: NavController,
-    viewModel: MainScreenViewModel
+    navController: NavController, viewModel: MainScreenViewModel
 ) {
 
     Scaffold(
@@ -39,32 +39,35 @@ fun MainScreenBody(
             )
         },
         content = { innerPadding ->
-            PopulateColumn(flow = viewModel.flow, innerPadding = innerPadding)
+            PopulateColumn(flow = viewModel.flow, innerPadding = innerPadding, navController)
         },
     )
 }
 
 @Composable
-fun PopulateColumn(flow: Flow<PagingData<ArtCollectionListItem>>, innerPadding: PaddingValues) {
+fun PopulateColumn(
+    flow: Flow<PagingData<ArtCollectionListItem>>,
+    innerPadding: PaddingValues,
+    navController: NavController
+) {
 
     val lazyPagingItems = flow.collectAsLazyPagingItems()
 
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Spacer(Modifier.padding(innerPadding))
         }
-        itemsIndexed(
-            items = lazyPagingItems,
-            key = { _, item ->  item.id }
-        ) { index, item ->
+        itemsIndexed(items = lazyPagingItems, key = { _, item -> item.id }) { index, item ->
             item?.let { artObject ->
 
-                val needHeader = (index == 0 || lazyPagingItems.peek(index - 1)?.author != item.author)
+                val needHeader =
+                    (index == 0 || lazyPagingItems.peek(index - 1)?.author != item.author)
                 ArtCollectionCard(artObject, needHeader) {
-//                    navController.navigate(Screens.DetailsScreen.route)
+                    navController.navigate(
+                        Screens.DetailsScreen.route + "?collectionName=${artObject.title}&collectionObjectNumber=${artObject.id}"
+                    )
                 }
             }
         }
@@ -93,9 +96,7 @@ fun PopulateColumn(flow: Flow<PagingData<ArtCollectionListItem>>, innerPadding: 
 
 @Composable
 fun ArtCollectionCard(
-    item: ArtCollectionListItem,
-    withHeader: Boolean = false,
-    onClick: () -> Unit
+    item: ArtCollectionListItem, withHeader: Boolean = false, onClick: () -> Unit
 ) {
     if (withHeader) Column {
         ArtCollectionCardHeader(title = item.title)
@@ -105,8 +106,7 @@ fun ArtCollectionCard(
 
 @Composable
 fun ArtCollectionCardNoHeader(
-    item: ArtCollectionListItem,
-    onClick: () -> Unit
+    item: ArtCollectionListItem, onClick: () -> Unit
 ) {
     ElevatedCard(
         onClick = onClick,
@@ -116,11 +116,9 @@ fun ArtCollectionCardNoHeader(
     ) {
         Column {
             SubcomposeAsyncImage(
-                model = item.imageHeaderUrl,
-                loading = {
+                model = item.imageHeaderUrl, loading = {
                     CircularProgressIndicator()
-                },
-                contentDescription = item.title
+                }, contentDescription = item.title
             )
             Text(text = item.title)
         }
@@ -138,9 +136,7 @@ fun ArtCollectionCardHeader(title: String) {
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(4.dp)
-                .fillMaxSize(),
-            text = title,
-            style = MaterialTheme.typography.headlineSmall
+                .fillMaxSize(), text = title, style = MaterialTheme.typography.headlineSmall
         )
     }
 }
@@ -170,9 +166,7 @@ fun LoadingItem() {
 
 @Composable
 fun ErrorItem(
-    message: String,
-    modifier: Modifier = Modifier,
-    onClickRetry: () -> Unit
+    message: String, modifier: Modifier = Modifier, onClickRetry: () -> Unit
 ) {
     Row(
         modifier = modifier.padding(8.dp),

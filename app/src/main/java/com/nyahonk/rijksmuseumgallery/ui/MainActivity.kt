@@ -13,10 +13,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.nyahonk.rijksmuseumgallery.ui.screens.Screens
 import com.nyahonk.rijksmuseumgallery.ui.screens.details.DetailsScreenBody
 import com.nyahonk.rijksmuseumgallery.ui.screens.main.MainScreenBody
-import com.nyahonk.rijksmuseumgallery.ui.screens.Screens
-import com.nyahonk.rijksmuseumgallery.ui.screens.main.MainScreenViewModel
 import com.nyahonk.rijksmuseumgallery.ui.theme.RijksmuseumGalleryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -53,11 +53,15 @@ fun NavHost(navController: NavHostController, modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         composable(Screens.MainScreen.route) {
-            val viewModel = hiltViewModel<MainScreenViewModel>()
-            MainScreenBody(navController = navController, viewModel)
+            MainScreenBody(navController = navController, hiltViewModel())
         }
-        composable(Screens.DetailsScreen.route) {
-            DetailsScreenBody()
+        composable(
+            route = Screens.DetailsScreen.route + "?collectionName={collectionName}&collectionObjectNumber={collectionObjectNumber}",
+            arguments = listOf(
+                navArgument("collectionName") { defaultValue = "" },
+                navArgument("collectionObjectNumber") { defaultValue = "" })
+        ) {
+            DetailsScreenBody(hiltViewModel())
         }
     }
 }

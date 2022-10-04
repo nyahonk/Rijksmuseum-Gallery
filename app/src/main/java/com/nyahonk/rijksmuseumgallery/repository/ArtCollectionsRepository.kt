@@ -12,7 +12,7 @@ class ArtCollectionsRepository @Inject constructor(
     suspend fun getCollectionItems(pageNumber: Int, resultsPerPage: Int): List<ArtCollectionListItem> {
         return networkDataSource.getCollectionItems(pageNumber, resultsPerPage).artObjects.map {
             ArtCollectionListItem(
-                id = it.id,
+                id = it.objectNumber,
                 title = it.title,
                 author = it.principalOrFirstMaker,
                 imageHeaderUrl = it.headerImage.url,

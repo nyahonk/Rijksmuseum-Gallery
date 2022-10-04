@@ -3,4 +3,5 @@
 
     <string name="btn_retry">Try again</string>
     <string name="network_error_message">Network error</string>
+    <string name="details_screen_author">Author: %1$s</string>
 </resources>
