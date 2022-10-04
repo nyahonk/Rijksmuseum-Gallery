@@ -1,13 +1,13 @@
-package com.nyahonk.rijksmuseumgallery.usecase
+package com.nyahonk.rijksmuseumgallery.ui.screens.main
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.nyahonk.rijksmuseumgallery.utils.Constants
 import com.nyahonk.rijksmuseumgallery.models.ArtCollectionListItem
-import com.nyahonk.rijksmuseumgallery.repository.ArtCollectionsRepository
+import com.nyahonk.rijksmuseumgallery.usecase.ArtCollectionsUseCase
+import com.nyahonk.rijksmuseumgallery.utils.Constants
 
 class CollectionsPagingSource(
-    private val repository: ArtCollectionsRepository
+    private val source: ArtCollectionsUseCase
 ) : PagingSource<Int, ArtCollectionListItem>() {
 
     override suspend fun load(
@@ -15,7 +15,7 @@ class CollectionsPagingSource(
     ): LoadResult<Int, ArtCollectionListItem> {
         return try {
             val nextPageNumber = params.key ?: 1
-            val response = repository.getCollectionItems(nextPageNumber, Constants.PAGE_SIZE)
+            val response = source.getCollectionItems(nextPageNumber, Constants.PAGE_SIZE)
             LoadResult.Page(
                 data = response,
                 prevKey = null, // Only paging forward.
