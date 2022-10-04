@@ -1,7 +1,7 @@
 package com.nyahonk.rijksmuseumgallery.datasource.api
 
 import com.nyahonk.rijksmuseumgallery.ApiKey
-import com.nyahonk.rijksmuseumgallery.Constants
+import com.nyahonk.rijksmuseumgallery.utils.Constants
 import com.nyahonk.rijksmuseumgallery.models.network.ArtCollectionDetailsResponse
 import com.nyahonk.rijksmuseumgallery.models.network.ArtCollectionResponse
 import retrofit2.http.GET

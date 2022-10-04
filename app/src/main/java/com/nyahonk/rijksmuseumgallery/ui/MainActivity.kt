@@ -16,8 +16,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.nyahonk.rijksmuseumgallery.ui.screens.Screens
 import com.nyahonk.rijksmuseumgallery.ui.screens.details.DetailsScreenBody
+import com.nyahonk.rijksmuseumgallery.ui.screens.details.DetailsScreenViewModel
 import com.nyahonk.rijksmuseumgallery.ui.screens.main.MainScreenBody
 import com.nyahonk.rijksmuseumgallery.ui.theme.RijksmuseumGalleryTheme
+import com.nyahonk.rijksmuseumgallery.utils.addFirstNavArgument
+import com.nyahonk.rijksmuseumgallery.utils.addNextNavArgument
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,10 +59,12 @@ fun NavHost(navController: NavHostController, modifier: Modifier = Modifier) {
             MainScreenBody(navController = navController, hiltViewModel())
         }
         composable(
-            route = Screens.DetailsScreen.route + "?collectionName={collectionName}&collectionObjectNumber={collectionObjectNumber}",
+            route = Screens.DetailsScreen.route
+                .addFirstNavArgument(DetailsScreenViewModel.COLLECTION_NAME)
+                .addNextNavArgument(DetailsScreenViewModel.COLLECTION_OBJECT_NUMBER),
             arguments = listOf(
-                navArgument("collectionName") { defaultValue = "" },
-                navArgument("collectionObjectNumber") { defaultValue = "" })
+                navArgument(DetailsScreenViewModel.COLLECTION_NAME) { defaultValue = "" },
+                navArgument(DetailsScreenViewModel.COLLECTION_OBJECT_NUMBER) { defaultValue = "" })
         ) {
             DetailsScreenBody(hiltViewModel())
         }

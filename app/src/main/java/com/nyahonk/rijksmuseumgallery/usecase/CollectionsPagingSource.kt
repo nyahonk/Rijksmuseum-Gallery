@@ -2,7 +2,7 @@ package com.nyahonk.rijksmuseumgallery.usecase
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.nyahonk.rijksmuseumgallery.Constants
+import com.nyahonk.rijksmuseumgallery.utils.Constants
 import com.nyahonk.rijksmuseumgallery.models.ArtCollectionListItem
 import com.nyahonk.rijksmuseumgallery.repository.ArtCollectionsRepository
 

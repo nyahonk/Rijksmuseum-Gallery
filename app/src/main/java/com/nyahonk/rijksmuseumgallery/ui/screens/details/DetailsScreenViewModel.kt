@@ -15,12 +15,18 @@ class DetailsScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val collectionName: String = checkNotNull(savedStateHandle["collectionName"])
-    private val collectionObjectNumber: String = checkNotNull(savedStateHandle["collectionObjectNumber"])
+    val collectionName: String = checkNotNull(savedStateHandle[COLLECTION_NAME])
+    private val collectionObjectNumber: String = checkNotNull(savedStateHandle[COLLECTION_OBJECT_NUMBER])
 
     val liveData: LiveData<ArtObjectDetailsItem> = liveData {
         val data = artCollectionsUseCase.getCollectionDetails(collectionObjectNumber)
         emit(data)
+    }
+
+    companion object {
+
+        const val COLLECTION_NAME = "collectionName"
+        const val COLLECTION_OBJECT_NUMBER = "collectionObjectNumber"
     }
 
 }

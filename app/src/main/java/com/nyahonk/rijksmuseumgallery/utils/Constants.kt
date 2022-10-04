@@ -1,4 +1,4 @@
-package com.nyahonk.rijksmuseumgallery
+package com.nyahonk.rijksmuseumgallery.utils
 
 object Constants {
 
