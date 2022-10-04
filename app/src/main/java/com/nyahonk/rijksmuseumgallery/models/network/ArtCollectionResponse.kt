@@ -1,38 +1,32 @@
 package com.nyahonk.rijksmuseumgallery.models.network
 
+import com.squareup.moshi.Json
+
 data class ArtCollectionResponse(
+    @Json(name = "artObjects")
     val artObjects: List<ArtObject>,
+    @Json(name = "count")
     val count: Int
 )
 
 data class ArtObject(
-    val hasImage: Boolean,
+    @Json(name = "headerImage")
     val headerImage: HeaderImage,
+    @Json(name = "id")
     val id: String,
+    @Json(name = "longTitle")
     val longTitle: String,
+    @Json(name = "objectNumber")
     val objectNumber: String,
-    val permitDownload: Boolean,
+    @Json(name = "principalOrFirstMaker")
     val principalOrFirstMaker: String,
-    val productionPlaces: List<String>,
-    val showImage: Boolean,
+    @Json(name = "title")
     val title: String,
+    @Json(name = "webImage")
     val webImage: WebImage
 )
 
 data class HeaderImage(
-    val guid: String,
-    val height: Int,
-    val offsetPercentageX: Int,
-    val offsetPercentageY: Int,
-    val url: String,
-    val width: Int
-)
-
-data class WebImage(
-    val guid: String,
-    val height: Int,
-    val offsetPercentageX: Int,
-    val offsetPercentageY: Int,
-    val url: String,
-    val width: Int
+    @Json(name = "url")
+    val url: String
 )

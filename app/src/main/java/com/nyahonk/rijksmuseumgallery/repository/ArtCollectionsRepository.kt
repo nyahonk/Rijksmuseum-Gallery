@@ -2,6 +2,7 @@ package com.nyahonk.rijksmuseumgallery.repository
 
 import com.nyahonk.rijksmuseumgallery.datasource.NetworkDataSource
 import com.nyahonk.rijksmuseumgallery.models.ArtCollectionListItem
+import com.nyahonk.rijksmuseumgallery.models.network.ArtCollectionDetailsResponse
 import javax.inject.Inject
 
 class ArtCollectionsRepository @Inject constructor(
@@ -18,5 +19,9 @@ class ArtCollectionsRepository @Inject constructor(
                 imageFullUrl = it.webImage.url
             )
         }
+    }
+
+    suspend fun getCollectionDetails(collection: String): ArtCollectionDetailsResponse {
+        return networkDataSource.getCollectionDetails(collection)
     }
 }
