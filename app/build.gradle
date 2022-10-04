@@ -69,11 +69,15 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.5.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.3'
+
+    implementation 'androidx.paging:paging-runtime:3.2.0-alpha02'
+    implementation 'androidx.paging:paging-compose:1.0.0-alpha16'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

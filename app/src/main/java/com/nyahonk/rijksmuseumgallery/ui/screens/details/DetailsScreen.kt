@@ -1,4 +1,4 @@
-package com.nyahonk.rijksmuseumgallery.ui.screens
+package com.nyahonk.rijksmuseumgallery.ui.screens.details
 
 import androidx.compose.runtime.Composable
 
