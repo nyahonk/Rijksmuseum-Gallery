@@ -2,6 +2,7 @@
 
 package com.nyahonk.rijksmuseumgallery.ui.screens.main
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
@@ -9,12 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemsIndexed
+import coil.compose.SubcomposeAsyncImage
+import com.nyahonk.rijksmuseumgallery.R
 import com.nyahonk.rijksmuseumgallery.models.ArtCollectionListItem
 import kotlinx.coroutines.flow.Flow
 
@@ -46,19 +50,23 @@ fun PopulateColumn(flow: Flow<PagingData<ArtCollectionListItem>>, innerPadding: 
     val lazyPagingItems = flow.collectAsLazyPagingItems()
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        items(
+        item {
+            Spacer(Modifier.padding(innerPadding))
+        }
+        itemsIndexed(
             items = lazyPagingItems,
-            key = { it.id }
-        ) { item ->
+            key = { _, item ->  item.id }
+        ) { index, item ->
             item?.let { artObject ->
-                ArtCollectionCard(artObject, innerPadding) {
+
+                val needHeader = (index == 0 || lazyPagingItems.peek(index - 1)?.author != item.author)
+                ArtCollectionCard(artObject, needHeader) {
 //                    navController.navigate(Screens.DetailsScreen.route)
                 }
-            } ?: ArtCollectionCardPlaceHolder(innerPadding) {}
+            }
         }
         lazyPagingItems.apply {
             when {
@@ -72,7 +80,7 @@ fun PopulateColumn(flow: Flow<PagingData<ArtCollectionListItem>>, innerPadding: 
                     item {
                         ErrorItem(
                             message = (loadState.append as LoadState.Error).error.message
-                                ?: "Network Error"
+                                ?: stringResource(R.string.network_error_message)
                         ) {
                             retry()
                         }
@@ -86,34 +94,54 @@ fun PopulateColumn(flow: Flow<PagingData<ArtCollectionListItem>>, innerPadding: 
 @Composable
 fun ArtCollectionCard(
     item: ArtCollectionListItem,
-    innerPadding: PaddingValues,
+    withHeader: Boolean = false,
+    onClick: () -> Unit
+) {
+    if (withHeader) Column {
+        ArtCollectionCardHeader(title = item.title)
+        ArtCollectionCardNoHeader(item = item, onClick)
+    } else ArtCollectionCardNoHeader(item = item, onClick)
+}
+
+@Composable
+fun ArtCollectionCardNoHeader(
+    item: ArtCollectionListItem,
     onClick: () -> Unit
 ) {
     ElevatedCard(
         onClick = onClick,
         modifier = Modifier
-            .padding(innerPadding)
+            .padding(8.dp)
             .fillMaxWidth(0.9f),
     ) {
         Column {
+            SubcomposeAsyncImage(
+                model = item.imageHeaderUrl,
+                loading = {
+                    CircularProgressIndicator()
+                },
+                contentDescription = item.title
+            )
             Text(text = item.title)
-            Text(text = item.author)
-            Text(text = item.imageHeaderUrl)
         }
     }
 }
 
 @Composable
-fun ArtCollectionCardPlaceHolder(innerPadding: PaddingValues, onClick: () -> Unit) {
+fun ArtCollectionCardHeader(title: String) {
     ElevatedCard(
-        onClick = onClick,
         modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxWidth(0.9f),
+            .padding(8.dp)
+            .fillMaxWidth(0.9f)
     ) {
-        Text(text = "title")
-        Text(text = "author")
-        Text(text = "imageHeaderUrl")
+        Text(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(4.dp)
+                .fillMaxSize(),
+            text = title,
+            style = MaterialTheme.typography.headlineSmall
+        )
     }
 }
 
@@ -135,7 +163,7 @@ fun LoadingItem() {
     CircularProgressIndicator(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(8.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
     )
 }
@@ -147,7 +175,7 @@ fun ErrorItem(
     onClickRetry: () -> Unit
 ) {
     Row(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -159,7 +187,7 @@ fun ErrorItem(
             color = Color.Red
         )
         OutlinedButton(onClick = onClickRetry) {
-            Text(text = "Try again")
+            Text(text = stringResource(R.string.btn_retry))
         }
     }
 }

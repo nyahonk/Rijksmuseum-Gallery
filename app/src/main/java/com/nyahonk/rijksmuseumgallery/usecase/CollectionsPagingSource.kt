@@ -14,7 +14,6 @@ class CollectionsPagingSource(
         params: LoadParams<Int>
     ): LoadResult<Int, ArtCollectionListItem> {
         return try {
-            // Start refresh at page 1 if undefined.
             val nextPageNumber = params.key ?: 1
             val response = repository.getCollectionItems(nextPageNumber, Constants.PAGE_SIZE)
             LoadResult.Page(
@@ -23,8 +22,6 @@ class CollectionsPagingSource(
                 nextKey = nextPageNumber + 1
             )
         } catch (e: Exception) {
-            // Handle errors in this block and return LoadResult.Error if it is an
-            // expected error (such as a network failure).
             LoadResult.Error(e)
         }
     }
