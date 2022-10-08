@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import coil.compose.SubcomposeAsyncImage
 import com.nyahonk.rijksmuseumgallery.R
@@ -18,6 +19,7 @@ fun DetailsScreenBody(
 ) {
 
     Scaffold(
+        modifier = Modifier.testTag("DetailsScreenBody"),
         topBar = {
             TopAppBar(
                 title = { Text(viewModel.collectionName) },

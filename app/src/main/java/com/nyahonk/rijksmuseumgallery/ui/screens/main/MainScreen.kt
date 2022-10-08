@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -39,7 +40,7 @@ fun MainScreenBody(
             )
         },
         content = { innerPadding ->
-            PopulateColumn(flow = viewModel.flow, innerPadding = innerPadding, navController)
+            PopulateColumn(flow = viewModel.getPagingFlow(), innerPadding = innerPadding, navController)
         },
     )
 }
@@ -54,7 +55,7 @@ fun PopulateColumn(
     val lazyPagingItems = flow.collectAsLazyPagingItems()
 
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth().testTag("Main Screen List"), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Spacer(Modifier.padding(innerPadding))
@@ -99,7 +100,7 @@ fun ArtCollectionCard(
     item: ArtCollectionListItem, withHeader: Boolean = false, onClick: () -> Unit
 ) {
     if (withHeader) Column {
-        ArtCollectionCardHeader(title = item.title)
+        ArtCollectionCardHeader(title = item.author)
         ArtCollectionCardNoHeader(item = item, onClick)
     } else ArtCollectionCardNoHeader(item = item, onClick)
 }
@@ -146,7 +147,7 @@ fun LoadingView(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.testTag("LoadingView"),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -161,6 +162,7 @@ fun LoadingItem() {
             .fillMaxWidth()
             .padding(8.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
+            .testTag("LoadingItem")
     )
 }
 
@@ -169,7 +171,7 @@ fun ErrorItem(
     message: String, modifier: Modifier = Modifier, onClickRetry: () -> Unit
 ) {
     Row(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier.padding(8.dp).testTag("ErrorItem"),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

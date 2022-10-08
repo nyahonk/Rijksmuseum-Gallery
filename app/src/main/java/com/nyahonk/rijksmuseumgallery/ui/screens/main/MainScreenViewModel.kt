@@ -10,12 +10,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainScreenViewModel @Inject constructor(
+open class MainScreenViewModel @Inject constructor(
     artCollectionsUseCase: ArtCollectionsUseCase
 ) : ViewModel() {
 
-    val flow = Pager(config = PagingConfig(pageSize = 20)) {
+    private val flow = Pager(config = PagingConfig(pageSize = 20)) {
         CollectionsPagingSource(artCollectionsUseCase)
     }.flow.cachedIn(viewModelScope)
 
+    open fun getPagingFlow() = flow
 }
